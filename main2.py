@@ -2,7 +2,7 @@ import numpy as np
 import streamlit as st
 # import geocoder
 import folium
-from moviepy import VideoFileClip
+# from moviepy import VideoFileClip
 from streamlit_folium import st_folium
 from folium.plugins import HeatMap
 import random
@@ -158,45 +158,15 @@ suggestions = [
 with col2:
     # Upload Section
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">Upload a Photo or Video for AI-Generated Greenery</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card-title">Upload a Photo for AI-Generated Greenery</div>', unsafe_allow_html=True)
 
-    # Tabs for Photo/Video
-    tab1, tab2 = st.tabs(["📸 Photo", "🎥 Video"])
-
-    with tab1:
-        # st.markdown('<div class="upload-area">', unsafe_allow_html=True)
-        photo_file = st.file_uploader("Upload a Photo", type=["jpg", "jpeg", "png"], key="photo")
-        if photo_file:
-            image = Image.open(photo_file)
-            st.image(image, caption="Uploaded Photo", use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with tab2:
-        st.markdown('<div class="upload-area">', unsafe_allow_html=True)
-        video_file = st.file_uploader("Upload a 15-second Video", type=["mp4", "mov", "avi"], key="video")
-
-        if video_file:
-            # Save the uploaded video file to a temporary file
-            with open("temp_video", "wb") as f:
-                f.write(video_file.getbuffer())
-
-            # Load the video to check duration
-            video_clip = VideoFileClip("temp_video")
-            video_duration = video_clip.duration  # in seconds
-
-            # Check if the video duration exceeds 15 seconds
-            if video_duration > 15:
-                st.error("❌ The video is too long. Please upload a video that is 15 seconds or less.")
-            else:
-                st.video(video_file)
-
-            # Optionally, delete the temporary file after processing
-            video_clip.close()
-            os.remove("temp_video")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    photo_file = st.file_uploader("Upload a Photo", type=["jpg", "jpeg", "png"], key="photo")
+    if photo_file:
+        image = Image.open(photo_file)
+        st.image(image, caption="Uploaded Photo", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+    # st.markdown('</div>', unsafe_allow_html=True)
 
     # Simulation Results Section
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -209,14 +179,26 @@ with col2:
     if simulate_button:
         st.info("Running simulation...")
 
-        # After simulation, generate and display suggestions
+        # Show pre-AI and post-AI images as an example
+        pre_ai_image = Image.open("Miami_Rundown.jpg")
+        post_ai_image = Image.open("Rundown_AI_Gen_Image.jpg")
+
+        st.subheader("🌍 Example of AI-enhanced Greenery")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.image(pre_ai_image, caption="Before AI Enhancement", use_container_width=True)
+
+        with col2:
+            st.image(post_ai_image, caption="After AI Enhancement", use_container_width=True)
+
+        st.subheader("🌱 How to Further Greenify This Area")
         num_suggestions = random.randint(1, len(suggestions))  # Choose random number of suggestions
         selected_suggestions = random.sample(suggestions, num_suggestions)
 
-        st.subheader("🌍 How to Further Greenify This Area")
         for suggestion in selected_suggestions:
             st.write(f"- {suggestion}")
-
     else:
         st.markdown("""
             <div style="
@@ -233,6 +215,42 @@ with col2:
             """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+    # Simulation Results Section
+    # st.markdown('<div class="card">', unsafe_allow_html=True)
+    # col_title, col_button = st.columns([2, 1])
+    # with col_title:
+    #     st.markdown('<div class="card-title">Simulation Results</div>', unsafe_allow_html=True)
+    # with col_button:
+    #     simulate_button = st.button("Simulate")
+    #
+    # if simulate_button:
+    #     st.info("Running simulation...")
+    #
+    #     # After simulation, generate and display suggestions
+    #     num_suggestions = random.randint(1, len(suggestions))  # Choose random number of suggestions
+    #     selected_suggestions = random.sample(suggestions, num_suggestions)
+    #
+    #     st.subheader("🌍 How to Further Greenify This Area")
+    #     for suggestion in selected_suggestions:
+    #         st.write(f"- {suggestion}")
+    #
+    # else:
+    #     st.markdown("""
+    #         <div style="
+    #             height: 200px;
+    #             background-color: #f0fdf4;
+    #             border-radius: 0.5rem;
+    #             display: flex;
+    #             align-items: center;
+    #             justify-content: center;
+    #             color: #166534;
+    #         ">
+    #             No simulation data available
+    #         </div>
+    #         """, unsafe_allow_html=True)
+    #
+    # st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Footer ---
 st.markdown("<br>", unsafe_allow_html=True)
