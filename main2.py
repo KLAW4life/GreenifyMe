@@ -12,7 +12,6 @@ from PIL import Image
 import io
 from streamlit.components.v1 import html
 
-
 # --- Page Config ---
 st.set_page_config(
     page_title="GreenifyMe",
