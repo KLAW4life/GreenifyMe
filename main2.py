@@ -1,16 +1,16 @@
 import numpy as np
 import streamlit as st
-import geocoder
+# import geocoder
 import folium
 from moviepy import VideoFileClip
 from streamlit_folium import st_folium
 from folium.plugins import HeatMap
 import random
 import os
-import base64
+# import base64
 from PIL import Image
-import io
-from streamlit.components.v1 import html
+# import io
+# from streamlit.components.v1 import html
 
 # --- Page Config ---
 st.set_page_config(
@@ -23,6 +23,7 @@ st.set_page_config(
 st.markdown("""
 <style>
     /* Main styling */
+
     .stApp {
         background-color: white;
     }
@@ -35,6 +36,11 @@ st.markdown("""
         padding: 1rem 0;
         border-bottom: 1px solid #e5e7eb;
         margin-bottom: 2rem;
+    }
+
+    .subtitle {
+        color: #166534;
+        font-size: 1.2rem;
     }
 
     .logo {
@@ -95,6 +101,7 @@ st.markdown("""
 st.markdown("""
 <div class="header">
     <div class="logo">GreenifyMe</div>
+    <div class="subtitle">Microclimate Analysis Tool</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -114,11 +121,15 @@ def generate_heatmap_data():
     for lat, lon in zip(lat_values, lon_values):
         intensity = random.uniform(28, 35)  # Fake temperature values
         heatmap_data.append([lat, lon, intensity])
+
     return heatmap_data
 
+if "heatmap_data" not in st.session_state:
+    st.session_state.heatmap_data = generate_heatmap_data()
+
 def create_heatmap():
-    heatmap_data = generate_heatmap_data()
-    map_disp = folium.Map(location=[25.7617, -80.1918], zoom_start=12, control_scale=True)
+    heatmap_data = st.session_state.heatmap_data
+    map_disp = folium.Map(location=[25.7617, -80.1918], zoom_start=13, control_scale=True)
     HeatMap(heatmap_data, radius=15, blur=10, min_opacity=0.5).add_to(map_disp)
     return map_disp
 
@@ -127,7 +138,7 @@ col1, col2 = st.columns([1, 1])
 
 with col1:
     st.markdown('<div class="">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">Interactive Heatmap of Your Area</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card-title">Heatmap of Your Area</div>', unsafe_allow_html=True)
 
     # Create and display the heatmap
     heatmap = create_heatmap()
